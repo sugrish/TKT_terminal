@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee login</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; background: #f2f5fa; color: #172033; font-family: system-ui, sans-serif; }
+        main { width: min(100%, 430px); padding: 34px; border: 1px solid #e6eaf1; border-radius: 20px; background: #fff; box-shadow: 0 20px 60px rgb(31 48 78 / 12%); }
+        h1 { margin-top: 0; }
+        label { display: block; margin: 18px 0 7px; font-weight: 650; }
+        input { width: 100%; padding: 12px; border: 1px solid #ccd4e2; border-radius: 9px; font: inherit; }
+        button { width: 100%; margin-top: 24px; padding: 13px; border: 0; border-radius: 9px; background: #304a9a; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+        .errorlist { color: #a62626; }
+        .help { color: #657089; }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Employee login</h1>
+        <p class="help">Log in with your name, position, and password.</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <label for="{{ form.name.id_for_label }}">Full name</label>
+            {{ form.name }}
+            {{ form.name.errors }}
+            <label for="{{ form.position.id_for_label }}">Position</label>
+            {{ form.position }}
+            {{ form.position.errors }}
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+            {{ form.password.errors }}
+            <button type="submit">Log in</button>
+        </form>
+        <p class="help">New here? <a href="{% url 'body:signup' %}">Sign up</a></p>
+    </main>
+</body>
+</html>

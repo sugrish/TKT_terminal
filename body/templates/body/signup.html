@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign up</title>
+</head>
+<body>
+    <main>
+        <h1>Sign up</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+        <p>Already signed up? <a href="{% url 'body:login' %}">Log in</a></p>
+    </main>
+</body>
+</html>

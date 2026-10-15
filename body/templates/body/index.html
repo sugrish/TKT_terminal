@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee profile</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #172033;
+            background: #f2f5fa;
+        }
+        * { box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 28px;
+            background: radial-gradient(ellipse at top left, #e0eaff, transparent 48%), #f2f5fa;
+        }
+        .profile-card {
+            width: min(100%, 540px);
+            overflow: hidden;
+            border: 1px solid #e6eaf1;
+            border-radius: 24px;
+            background: #fff;
+            box-shadow: 0 24px 70px rgb(31 48 78 / 12%);
+        }
+        .card-banner { height: 148px; background: linear-gradient(120deg, #273b80, #5478d4 65%, #8ab7f2); }
+        .profile-content { padding: 0 36px 36px; }
+        .avatar, .avatar-fallback {
+            width: 116px;
+            height: 116px;
+            margin-top: -58px;
+            border: 5px solid #fff;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #edf2ff;
+            box-shadow: 0 5px 18px rgb(31 48 78 / 15%);
+        }
+        .avatar-fallback {
+            display: grid;
+            place-items: center;
+            color: #304a9a;
+            font-size: 34px;
+            font-weight: 700;
+        }
+        .eyebrow { margin: 24px 0 6px; color: #66728a; font-size: 12px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+        h1 { margin: 0; font-size: clamp(28px, 6vw, 36px); letter-spacing: -.04em; }
+        .department { margin: 8px 0 26px; color: #657089; }
+        .id-panel { padding: 18px 20px; border: 1px solid #e5eaf5; border-radius: 14px; background: #f8faff; }
+        .id-label { display: block; margin-bottom: 7px; color: #66728a; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+        .employee-id { color: #263f91; font-size: 18px; font-weight: 750; overflow-wrap: anywhere; }
+        .empty-state { width: min(100%, 480px); padding: 42px; border: 1px solid #e6eaf1; border-radius: 24px; background: #fff; text-align: center; box-shadow: 0 24px 70px rgb(31 48 78 / 10%); }
+        .empty-state p { color: #657089; line-height: 1.6; }
+        .button { display: inline-block; margin-top: 12px; padding: 12px 18px; border-radius: 10px; background: #304a9a; color: white; font-weight: 650; text-decoration: none; }
+        @media (max-width: 480px) { .profile-content { padding-right: 24px; padding-left: 24px; } }
+    </style>
+</head>
+<body>
+    {% if employee %}
+    <main class="profile-card">
+        <div class="card-banner" aria-hidden="true"></div>
+        <section class="profile-content" aria-label="Employee profile">
+            {% if employee.photo %}
+                <img class="avatar" src="{{ employee.photo.url }}" alt="Profile photo of {{ employee.name }}">
+            {% else %}
+                <div class="avatar-fallback" aria-label="No profile photo uploaded">
+                    {{ employee.name|first|upper }}
+                </div>
+            {% endif %}
+            <p class="eyebrow">Employee profile</p>
+            <h1>{{ employee.name }}</h1>
+            <p class="department">{{ employee.department }}</p>
+            <div class="id-panel">
+                <span class="id-label">Employee ID</span>
+                <span class="employee-id">{{ employee.employee_id }}</span>
+            </div>
+            {% if employee.is_hr_access %}
+            <p><a href="{% url 'body:employee_directory' %}">Open employee directory</a></p>
+            {% endif %}
+            <form method="post" action="{% url 'body:logout' %}">
+                {% csrf_token %}
+                <button type="submit">Log out</button>
+            </form>
+        </section>
+    </main>
+    {% else %}
+    <main class="empty-state">
+        <h1>Your profile will appear here</h1>
+        <p>Sign up first to create your employee profile and view your photo, name, and employee ID.</p>
+        <a class="button" href="{% url 'body:signup' %}">Go to signup</a>
+        <p>Already registered? <a href="{% url 'body:login' %}">Log in</a></p>
+    </main>
+    {% endif %}
+</body>
+</html>

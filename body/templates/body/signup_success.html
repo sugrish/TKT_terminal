@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Signup complete</title>
+</head>
+<body>
+    <main>
+        <h1>Signup complete</h1>
+        <p>Your information was submitted successfully.</p>
+        {% if employee %}
+        <p>Name: <strong>{{ employee.name }}</strong></p>
+        <p>Department: <strong>{{ employee.department }}</strong></p>
+        <p>Employee ID: <strong>{{ employee.employee_id }}</strong></p>
+        {% if employee.photo_url %}
+        <p>Photo:</p>
+        <img src="{{ employee.photo_url }}" alt="Photo of {{ employee.name }}" width="160">
+        {% endif %}
+        {% endif %}
+        <a href="{% url 'body:index' %}">Go to Homepage</a>
+    </main>
+</body>
+</html>
