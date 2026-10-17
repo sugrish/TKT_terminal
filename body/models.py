@@ -1,5 +1,6 @@
 import re
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
@@ -22,7 +23,7 @@ class Body_signup(models.Model):
     password_hash = models.CharField(max_length=128, blank=True)
     is_hr_access = models.BooleanField(
         default=False,
-        help_text='Allow this employee to view the employee directory.',
+        help_text='Override position permissions and allow directory viewing and CSV export.',
     )
 
     def save(self, *args, **kwargs):
@@ -45,6 +46,39 @@ class Body_signup(models.Model):
                 suffix += 1
 
         super().save(*args, **kwargs)
+
+
+class PositionPermission(models.Model):
+    position = models.CharField(max_length=100, unique=True)
+    can_view_employee_directory = models.BooleanField(
+        default=False,
+        help_text='Allow employees with this position to view the employee directory.',
+    )
+    can_export_employee_directory = models.BooleanField(
+        default=False,
+        help_text='Allow employees with this position to download directory CSV files.',
+    )
+
+    class Meta:
+        ordering = ('position',)
+        verbose_name = 'position permission'
+        verbose_name_plural = 'position permissions'
+
+    def clean(self):
+        super().clean()
+        self.position = (self.position or '').strip()
+        duplicate_position = PositionPermission.objects.filter(
+            position__iexact=self.position
+        ).exclude(pk=self.pk)
+        if self.position and duplicate_position.exists():
+            raise ValidationError({'position': 'A permission rule already exists for this position.'})
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.position
 
 class Body_login(models.Model):
     username = models.CharField(max_length=100)

@@ -78,7 +78,7 @@
                 <span class="id-label">Employee ID</span>
                 <span class="employee-id">{{ employee.employee_id }}</span>
             </div>
-            {% if employee.is_hr_access %}
+            {% if can_view_employee_directory %}
             <p><a href="{% url 'body:employee_directory' %}">Open employee directory</a></p>
             {% endif %}
             <form method="post" action="{% url 'body:logout' %}">

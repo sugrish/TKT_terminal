@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
     
 from .forms import BodySignupForm, EmployeeLoginForm
-from .models import Body_signup
+from .models import Body_signup, PositionPermission
 
 
 def signup(request):
@@ -43,7 +43,7 @@ def employee_login(request):
         if employee:
             request.session.cycle_key()
             request.session['profile_employee_id'] = employee.employee_id
-            if employee.is_hr_access:
+            if _employee_has_permission(employee, 'can_view_employee_directory'):
                 return redirect('body:employee_directory')
             return redirect('body:index')
         form.add_error(None, 'Name, position, or password is incorrect.')
@@ -61,10 +61,27 @@ def index(request):
     employee = None
     if employee_id:
         employee = Body_signup.objects.filter(employee_id=employee_id).first()
-    return render(request, 'body/index.html', {'employee': employee})
+    return render(
+        request,
+        'body/index.html',
+        {
+            'employee': employee,
+            'can_view_employee_directory': employee is not None
+            and _employee_has_permission(employee, 'can_view_employee_directory'),
+        },
+    )
 
 
-def _hr_employee_or_response(request):
+def _employee_has_permission(employee, permission):
+    if employee.is_hr_access:
+        return True
+    return PositionPermission.objects.filter(
+        position__iexact=employee.position,
+        **{permission: True},
+    ).exists()
+
+
+def _employee_or_permission_response(request, permission):
     employee_id = request.session.get('profile_employee_id')
     if not employee_id:
         return None, redirect('body:login')
@@ -73,9 +90,9 @@ def _hr_employee_or_response(request):
     if current_employee is None:
         request.session.pop('profile_employee_id', None)
         return None, redirect('body:login')
-    if not current_employee.is_hr_access:
+    if not _employee_has_permission(current_employee, permission):
         return None, HttpResponseForbidden(
-            'HR access is required to view employee records.'
+            'Your position does not have permission to perform this action.'
         )
     return current_employee, None
 
@@ -96,7 +113,9 @@ def _filtered_employees(request):
 
 
 def employee_directory(request):
-    current_employee, response = _hr_employee_or_response(request)
+    current_employee, response = _employee_or_permission_response(
+        request, 'can_view_employee_directory'
+    )
     if response:
         return response
 
@@ -120,7 +139,9 @@ def employee_directory(request):
 
 
 def employee_export(request):
-    _, response = _hr_employee_or_response(request)
+    _, response = _employee_or_permission_response(
+        request, 'can_export_employee_directory'
+    )
     if response:
         return response
 

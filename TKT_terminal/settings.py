@@ -29,9 +29,27 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'true').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get(
+VERCEL_HOST = os.environ.get('VERCEL_URL', '').replace('https://', '').replace('http://', '')
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+if VERCEL_HOST:
+    ALLOWED_HOSTS.append(VERCEL_HOST)
+ALLOWED_HOSTS += ['.vercel.app', '.now.sh']
+
+for host in os.environ.get(
     'DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,192.168.100.79'
-).split(',')
+).split(','):
+    host = host.strip()
+    if host:
+        ALLOWED_HOSTS.append(host)
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.vercel.app',
+    'https://*.now.sh',
+]
+if VERCEL_HOST:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{VERCEL_HOST}')
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
@@ -121,7 +139,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

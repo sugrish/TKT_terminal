@@ -44,6 +44,16 @@ Open `http://127.0.0.1:8000/body/` to sign up. The employee profile is at `http:
 2. Open **Body signups**, select the employee record, enable **Is HR access**, then save.
 3. That employee can log in at `/body/login/`; HR-enabled users are directed to `/body/employees/`.
 
+## Position permissions
+
+Permissions can be assigned to everyone with the same position from Django Admin:
+
+1. Open **Position permissions** and add the exact position name used on employee records.
+2. Select whether that position can view the employee directory and/or download its CSV export.
+3. Save the rule. Employees with that position receive the configured access at their next request; position matching ignores letter case.
+
+Permissions default to denied when no rule exists. The existing **Is HR access** employee setting remains a manual override that grants both directory viewing and CSV export. Additional position permissions can be added as new app actions are introduced.
+
 ## Network development
 
 For temporary testing on a trusted local network, set `DJANGO_ALLOWED_HOSTS` to include this computer's LAN IP and run:

@@ -1,12 +1,13 @@
 import tempfile
 
 from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Body_signup
+from .models import Body_signup, PositionPermission
 
 TEST_PASSWORD = 'Uncommon-Passphrase-2026!'
 
@@ -392,6 +393,93 @@ class SignupViewTests(TestCase):
         response = self.client.get(reverse('body:employee_directory'))
 
         self.assertEqual(response.status_code, 403)
+
+    def test_position_permission_grants_directory_to_employees_in_that_position(self):
+        PositionPermission.objects.create(
+            position='Manager',
+            can_view_employee_directory=True,
+        )
+        first_employee = Body_signup.objects.create(
+            name='Manager One',
+            age=35,
+            department='Operations',
+            position='manager',
+            residence='Sample City',
+            gender='Other',
+            complications='None',
+            password_hash=make_password(TEST_PASSWORD),
+        )
+        second_employee = Body_signup.objects.create(
+            name='Manager Two',
+            age=36,
+            department='Operations',
+            position='Manager',
+            residence='Sample City',
+            gender='Other',
+            complications='None',
+            password_hash=make_password(TEST_PASSWORD),
+        )
+
+        login_response = self.client.post(
+            reverse('body:login'),
+            {
+                'name': first_employee.name,
+                'position': first_employee.position,
+                'password': TEST_PASSWORD,
+            },
+        )
+        self.assertRedirects(login_response, reverse('body:employee_directory'))
+
+        for employee in (first_employee, second_employee):
+            session = self.client.session
+            session['profile_employee_id'] = employee.employee_id
+            session.save()
+            response = self.client.get(reverse('body:employee_directory'))
+            self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(reverse('body:employee_export'))
+        self.assertEqual(response.status_code, 403)
+
+    def test_position_permission_duplicate_names_are_rejected_case_insensitive(self):
+        PositionPermission.objects.create(
+            position='Manager',
+            can_view_employee_directory=True,
+        )
+
+        with self.assertRaisesMessage(
+            ValidationError,
+            'A permission rule already exists for this position.',
+        ):
+            PositionPermission(
+                position='manager',
+                can_view_employee_directory=True,
+            ).save()
+
+    def test_position_can_be_granted_csv_export_without_directory_access(self):
+        PositionPermission.objects.create(
+            position='Auditor',
+            can_export_employee_directory=True,
+        )
+        employee = Body_signup.objects.create(
+            name='Avery Auditor',
+            age=32,
+            department='Finance',
+            position='Auditor',
+            residence='Sample City',
+            gender='Other',
+            complications='None',
+            password_hash=make_password(TEST_PASSWORD),
+        )
+        session = self.client.session
+        session['profile_employee_id'] = employee.employee_id
+        session.save()
+
+        directory_response = self.client.get(reverse('body:employee_directory'))
+        export_response = self.client.get(reverse('body:employee_export'))
+
+        self.assertEqual(directory_response.status_code, 403)
+        self.assertEqual(export_response.status_code, 200)
+        self.assertTrue(export_response['Content-Type'].startswith('text/csv'))
 
     def test_non_hr_employee_cannot_export_directory(self):
         employee = Body_signup.objects.create(
