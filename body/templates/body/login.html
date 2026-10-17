@@ -15,8 +15,46 @@
         .errorlist { color: #a62626; }
         .help { color: #657089; }
     </style>
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: Inter, "Segoe UI", sans-serif;
+        }
+        .logo-wrap {
+            width: min(100%, 980px);
+            margin: 28px auto 0;
+            display: flex;
+            justify-content: center;
+        }
+        .brand-logo-svg {
+            width: min(100%, 1180px);
+            height: auto;
+            display: block;
+        }
+        main {
+            width: min(100%, 430px);
+            margin: 20px auto 52px;
+            padding: 34px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        h1 { margin-top: 0; }
+        label { display: block; margin: 18px 0 7px; font-weight: 650; }
+        input { width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.12); border-radius: 9px; font: inherit; background: #111; color: #fff; }
+        button { width: 100%; margin-top: 24px; padding: 13px; border: 0; border-radius: 9px; background: #0d4db8; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+        .errorlist { color: #ffb4b4; }
+        .help { color: #d7dce6; }
+        a { color: #7db2ff; }
+    </style>
 </head>
 <body>
+    <div class="logo-wrap">
+        {% include "body/brand_logo.html" %}
+    </div>
     <main>
         <h1>Employee login</h1>
         <p class="help">Log in with your name, position, and password.</p>

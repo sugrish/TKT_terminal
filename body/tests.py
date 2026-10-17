@@ -24,6 +24,9 @@ class SignupViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Sign up')
+        self.assertContains(response, 'Male')
+        self.assertContains(response, 'Admin')
+        self.assertContains(response, 'CEO')
 
     def test_valid_signup_creates_and_displays_employee_id(self):
         response = self.client.post(

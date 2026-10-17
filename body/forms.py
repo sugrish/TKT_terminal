@@ -6,8 +6,32 @@ from django.contrib.auth.password_validation import validate_password
 
 from .models import Body_signup
 
+GENDER_CHOICES = [
+    ('Male', 'Male'),
+    ('Female', 'Female'),
+]
+
+DEPARTMENT_CHOICES = [
+    ('Admin', 'Admin'),
+    ('Maintenance', 'Maintenance'),
+    ('Facility', 'Facility'),
+]
+
+POSITION_CHOICES = [
+    ('Employee', 'Employee'),
+    ('CEO', 'CEO'),
+    ('COO', 'COO'),
+    ('HR', 'HR'),
+    ('Manager', 'Manager'),
+    ('Fin Sec', 'Fin Sec'),
+    ('Other', 'Other'),
+]
+
 
 class BodySignupForm(forms.ModelForm):
+    gender = forms.ChoiceField(choices=GENDER_CHOICES, label='Sex')
+    department = forms.ChoiceField(choices=DEPARTMENT_CHOICES)
+    position = forms.ChoiceField(choices=POSITION_CHOICES)
     password = forms.CharField(
         label='Password',
         strip=False,
@@ -84,7 +108,7 @@ class BodySignupForm(forms.ModelForm):
 
 class EmployeeLoginForm(forms.Form):
     name = forms.CharField(max_length=100, label='Full name')
-    position = forms.CharField(max_length=100, label='Position')
+    position = forms.ChoiceField(choices=POSITION_CHOICES, label='Position')
     password = forms.CharField(strip=False, widget=forms.PasswordInput)
 
     def authenticate(self):

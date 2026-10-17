@@ -58,8 +58,23 @@
         .button { display: inline-block; margin-top: 12px; padding: 12px 18px; border-radius: 10px; background: #304a9a; color: white; font-weight: 650; text-decoration: none; }
         @media (max-width: 480px) { .profile-content { padding-right: 24px; padding-left: 24px; } }
     </style>
+    <style>
+        .site-brand {
+            width: min(100%, 1000px);
+            margin: 18px auto 0;
+            display: block;
+        }
+        .site-brand .brand-logo-svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
 </head>
 <body>
+    <div class="site-brand">
+        {% include "body/brand_logo.html" %}
+    </div>
     {% if employee %}
     <main class="profile-card">
         <div class="card-banner" aria-hidden="true"></div>

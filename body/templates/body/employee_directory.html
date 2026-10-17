@@ -27,8 +27,23 @@
         button { padding: 9px 13px; border: 0; border-radius: 8px; background: #304a9a; color: white; font: inherit; font-weight: 650; cursor: pointer; }
         @media (max-width: 600px) { body { padding: 18px; } header { align-items: flex-start; flex-direction: column; } }
     </style>
+    <style>
+        .site-brand {
+            width: min(100%, 1000px);
+            margin: 18px auto 0;
+            display: block;
+        }
+        .site-brand .brand-logo-svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
 </head>
 <body>
+    <div class="site-brand">
+        {% include "body/brand_logo.html" %}
+    </div>
     <main>
         <header>
             <div>
