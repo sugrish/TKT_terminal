@@ -13,6 +13,12 @@ TEST_PASSWORD = 'Uncommon-Passphrase-2026!'
 
 
 class SignupViewTests(TestCase):
+    def test_root_url_redirects_to_body_signup(self):
+        response = self.client.get('/')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/body/')
+
     def test_signup_page_is_available(self):
         response = self.client.get(reverse('body:signup'))
 
