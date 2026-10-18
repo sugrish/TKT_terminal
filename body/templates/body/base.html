@@ -1,0 +1,37 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Employee Portal{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23000000'/%3E%3Ctext x='18' y='82' fill='%23A14214' font-size='86' font-weight='900' font-family='Arial,sans-serif'%3ET%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'body/css/site.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <header class="site-header">
+        <a class="brand-lockup" href="{% url 'body:signup' %}" aria-label="Employee Portal home">
+            <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="brand-copy"><strong>PEOPLE</strong><span>OPERATIONS</span></span>
+        </a>
+        <span class="header-divider" aria-hidden="true"></span>
+        <span class="header-note">EMPLOYEE SERVICES</span>
+        <nav class="site-nav" aria-label="Main navigation">
+            <a class="nav-link{% if request.resolver_match.url_name == 'signup' %} is-active{% endif %}" href="{% url 'body:signup' %}"{% if request.resolver_match.url_name == 'signup' %} aria-current="page"{% endif %}>Home</a>
+            <a class="nav-link{% if request.resolver_match.url_name == 'login' %} is-active{% endif %}" href="{% url 'body:login' %}"{% if request.resolver_match.url_name == 'login' %} aria-current="page"{% endif %}>Employee login</a>
+            <a class="nav-cta" href="{% url 'body:signup' %}">Create profile <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+    <div class="site-content">
+        {% block content %}{% endblock %}
+    </div>
+    <footer class="site-footer">
+        <span>© {% now "Y" %} Employee Portal</span>
+        <span class="footer-status"><span class="status-dot" aria-hidden="true"></span> Employee operations portal</span>
+    </footer>
+</body>
+</html>
