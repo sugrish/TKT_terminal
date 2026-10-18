@@ -27,6 +27,9 @@ class SignupViewTests(TestCase):
         self.assertContains(response, 'Male')
         self.assertContains(response, 'Admin')
         self.assertContains(response, 'CEO')
+        self.assertContains(response, 'Maintenance &amp; Facility')
+        self.assertNotContains(response, '>Maintenance</option>')
+        self.assertNotContains(response, '>Facility</option>')
 
     def test_valid_signup_creates_and_displays_employee_id(self):
         response = self.client.post(
@@ -347,6 +350,51 @@ class SignupViewTests(TestCase):
         self.assertContains(response, 'Avery Operations')
         self.assertNotContains(response, 'Casey Finance')
         self.assertEqual(response.context['result_count'], 1)
+
+    def test_combined_department_filter_includes_legacy_maintenance_and_facility(self):
+        hr = Body_signup.objects.create(
+            name='Harper Resource',
+            age=35,
+            department='People',
+            position='HR',
+            residence='Sample City',
+            gender='Other',
+            complications='None',
+            password_hash=make_password(TEST_PASSWORD),
+            is_hr_access=True,
+        )
+        Body_signup.objects.create(
+            name='Morgan Maintenance',
+            age=29,
+            department='Maintenance',
+            position='Technician',
+            residence='Example City',
+            gender='Other',
+            complications='None',
+        )
+        Body_signup.objects.create(
+            name='Casey Facility',
+            age=32,
+            department='Facility',
+            position='Coordinator',
+            residence='Example City',
+            gender='Other',
+            complications='None',
+        )
+        session = self.client.session
+        session['profile_employee_id'] = hr.employee_id
+        session.save()
+
+        response = self.client.get(
+            reverse('body:employee_directory'),
+            {'department': 'Maintenance & Facility'},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Morgan Maintenance')
+        self.assertContains(response, 'Casey Facility')
+        self.assertContains(response, 'Maintenance &amp; Facility')
+        self.assertEqual(response.context['result_count'], 2)
 
     def test_hr_can_download_employee_csv(self):
         hr = Body_signup.objects.create(

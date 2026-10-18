@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
     
-from .forms import BodySignupForm, EmployeeLoginForm
+from .forms import BodySignupForm, DEPARTMENT_CHOICES, EmployeeLoginForm
 from .models import Body_signup, PositionPermission
 
 
@@ -108,8 +108,35 @@ def _filtered_employees(request):
             | Q(position__icontains=search_query)
         )
     if department:
-        employees = employees.filter(department__iexact=department)
+        if department.casefold() == 'maintenance & facility'.casefold():
+            employees = employees.filter(
+                Q(department__iexact='Maintenance & Facility')
+                | Q(department__iexact='Maintenance')
+                | Q(department__iexact='Facility')
+            )
+        else:
+            employees = employees.filter(department__iexact=department)
     return employees.order_by('name'), search_query, department
+
+
+def _directory_departments():
+    departments = list(
+        Body_signup.objects.order_by('department')
+        .values_list('department', flat=True)
+        .distinct()
+    )
+    combined_department = DEPARTMENT_CHOICES[-1][0]
+    combined_names = {'maintenance', 'facility', combined_department.casefold()}
+    has_combined_department = any(
+        department.casefold() in combined_names for department in departments
+    )
+    departments = [
+        department for department in departments
+        if department.casefold() not in combined_names
+    ]
+    if has_combined_department:
+        departments.append(combined_department)
+    return departments
 
 
 def employee_directory(request):
@@ -120,9 +147,7 @@ def employee_directory(request):
         return response
 
     employees, search_query, department = _filtered_employees(request)
-    departments = Body_signup.objects.order_by('department').values_list(
-        'department', flat=True
-    ).distinct()
+    departments = _directory_departments()
     page = Paginator(employees, 25).get_page(request.GET.get('page'))
     return render(
         request,

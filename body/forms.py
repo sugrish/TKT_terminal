@@ -13,8 +13,7 @@ GENDER_CHOICES = [
 
 DEPARTMENT_CHOICES = [
     ('Admin', 'Admin'),
-    ('Maintenance', 'Maintenance'),
-    ('Facility', 'Facility'),
+    ('Maintenance & Facility', 'Maintenance & Facility'),
 ]
 
 POSITION_CHOICES = [
