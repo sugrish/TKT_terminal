@@ -4,40 +4,36 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Employee directory</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23000000'/%3E%3Ctext x='18' y='82' fill='%23A14214' font-size='86' font-weight='900' font-family='Arial,sans-serif'%3ET%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
-        body { margin: 0; padding: 32px; background: #f2f5fa; color: #172033; font-family: system-ui, sans-serif; }
+        body { min-height: 100vh; margin: 0; padding: 16px 28px 36px; background: radial-gradient(ellipse at 50% 0%, #39107b30, transparent 38%), #000; color: #f5f3f2; font-family: "DM Sans", sans-serif; }
         main { max-width: 1200px; margin: 0 auto; }
-        header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 22px; }
-        h1 { margin: 0; }
-        .subheading { color: #657089; }
-        .table-wrap { overflow-x: auto; border: 1px solid #e2e7f0; border-radius: 14px; background: white; box-shadow: 0 16px 40px rgb(31 48 78 / 8%); }
+        .site-brand { width: min(100%, 850px); margin: 0 auto 4px; }
+        .site-brand .brand-logo-svg { width: 100%; height: auto; display: block; }
+        header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin: 6px 0 22px; }
+        h1 { margin: 0; font: 600 clamp(27px, 4vw, 36px)/1.2 "Space Grotesk", sans-serif; }
+        .subheading { color: #aaa4b0; }
+        .table-wrap { overflow-x: auto; border: 1px solid #ffffff1c; border-radius: 14px; background: #0b0b0d; box-shadow: 0 20px 60px #000, 0 0 35px #39107b20; }
         table { width: 100%; border-collapse: collapse; min-width: 900px; }
-        th, td { padding: 13px 14px; border-bottom: 1px solid #edf0f5; text-align: left; vertical-align: middle; }
-        th { background: #f8faff; color: #58647b; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
+        th, td { padding: 13px 14px; border-bottom: 1px solid #ffffff12; text-align: left; vertical-align: middle; }
+        th { background: #39107b36; color: #d8cce9; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
         tr:last-child td { border-bottom: 0; }
-        .photo { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #edf2ff; }
-        .no-photo { color: #9099aa; }
+        tbody tr:hover { background: #a1421417; }
+        .photo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: #1b1522; box-shadow: 0 0 0 1px #a14214; }
+        .no-photo { color: #8b8491; }
         .actions { display: flex; align-items: center; gap: 16px; }
-        .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-bottom: 18px; padding: 16px; border: 1px solid #e2e7f0; border-radius: 12px; background: white; }
-        .filters label { display: grid; gap: 5px; color: #58647b; font-size: 13px; font-weight: 650; }
-        .filters input, .filters select { min-width: 190px; padding: 9px 10px; border: 1px solid #ccd4e2; border-radius: 8px; font: inherit; }
-        .pagination { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 18px; }
-        a { color: #304a9a; }
-        button { padding: 9px 13px; border: 0; border-radius: 8px; background: #304a9a; color: white; font: inherit; font-weight: 650; cursor: pointer; }
-        @media (max-width: 600px) { body { padding: 18px; } header { align-items: flex-start; flex-direction: column; } }
-    </style>
-    <style>
-        .site-brand {
-            width: min(100%, 1000px);
-            margin: 18px auto 0;
-            display: block;
-        }
-        .site-brand .brand-logo-svg {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+        .filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 18px; padding: 16px; border: 1px solid #ffffff1c; border-radius: 12px; background: #0b0b0d; }
+        .filters label { display: grid; gap: 6px; color: #c7c1cb; font-size: 13px; font-weight: 600; }
+        .filters input, .filters select { min-width: 190px; padding: 10px 12px; border: 1px solid #ffffff24; border-radius: 8px; background: #141316; color: #fff; font: inherit; }
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 18px; color: #c7c1cb; }
+        a { color: #e6a17d; text-underline-offset: 3px; }
+        button { padding: 10px 14px; border: 0; border-radius: 8px; background: #a14214; color: #fff; font: 700 13px "DM Sans", sans-serif; cursor: pointer; transition: background .2s, transform .2s; }
+        button:hover { background: #eb3324; transform: translateY(-1px); }
+        @media (max-width: 600px) { body { padding: 12px 16px 24px; } header { align-items: flex-start; flex-direction: column; } .filters input, .filters select { min-width: 100%; } }
     </style>
 </head>
 <body>

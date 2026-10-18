@@ -4,61 +4,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign up</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23000000'/%3E%3Ctext x='18' y='82' fill='%23A14214' font-size='86' font-weight='900' font-family='Arial,sans-serif'%3ET%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            background: #000;
-            color: #fff;
-            font-family: Inter, "Segoe UI", sans-serif;
-        }
-        .logo-wrap {
-            width: min(100%, 980px);
-            margin: 28px auto 0;
-            display: flex;
-            justify-content: center;
-        }
-        .brand-logo-svg {
-            width: min(100%, 1180px);
-            height: auto;
-            display: block;
-        }
-        main {
-            max-width: 520px;
-            margin: 20px auto 52px;
-            padding: 24px 26px 28px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 18px;
-        }
-        h1 {
-            margin-top: 0;
-            color: #fff;
-        }
-        form {
-            display: grid;
-            gap: 12px;
-        }
-        input, select, textarea, button {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.16);
-            font: inherit;
-        }
-        button {
-            background: #0d4db8;
-            color: white;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-        }
-        p, label {
-            color: #e5e7eb;
-        }
-        a {
-            color: #7db2ff;
-        }
+        * { box-sizing: border-box; }
+        body { min-height: 100vh; margin: 0; padding: 16px 24px 44px; background: radial-gradient(ellipse at 50% 0%, #39107b38, transparent 42%), #000; color: #f5f3f2; font-family: "DM Sans", sans-serif; }
+        .logo-wrap { width: min(100%, 860px); margin: 0 auto 6px; display: flex; justify-content: center; }
+        .brand-logo-svg { width: 100%; height: auto; display: block; }
+        main { width: min(100%, 620px); margin: 0 auto; padding: 30px; border: 1px solid #ffffff20; border-radius: 20px; background: linear-gradient(145deg, #111, #080808); box-shadow: 0 24px 70px #000, 0 0 45px #39107b24; }
+        h1 { margin: 0 0 18px; font: 600 30px/1.2 "Space Grotesk", sans-serif; }
+        form { display: grid; gap: 12px; }
+        form p { margin: 0; color: #e2dee5; }
+        label { display: inline-block; margin-bottom: 6px; color: #e2dee5; font-size: 14px; font-weight: 600; }
+        input, select, textarea, button { width: 100%; padding: 11px 12px; border-radius: 9px; border: 1px solid #ffffff24; background: #141316; color: #fff; font: inherit; }
+        input:focus, select:focus, textarea:focus { outline: 2px solid #a14214; outline-offset: 1px; }
+        button { margin-top: 6px; background: #a14214; color: white; font-weight: 700; border: none; cursor: pointer; transition: background .2s, transform .2s; }
+        button:hover { background: #eb3324; transform: translateY(-1px); }
+        p { color: #b9b5bd; }
+        a { color: #e6a17d; text-underline-offset: 3px; }
+        .errorlist { color: #ff8279; }
+        @media (max-width: 520px) { body { padding: 12px 16px 28px; } main { padding: 24px 20px; } }
     </style>
 </head>
 <body>

@@ -29,9 +29,16 @@ POSITION_CHOICES = [
 
 
 class BodySignupForm(forms.ModelForm):
-    gender = forms.ChoiceField(choices=GENDER_CHOICES, label='Sex')
-    department = forms.ChoiceField(choices=DEPARTMENT_CHOICES)
-    position = forms.ChoiceField(choices=POSITION_CHOICES)
+    gender = forms.CharField(
+        label='Sex',
+        widget=forms.Select(choices=GENDER_CHOICES),
+    )
+    department = forms.CharField(
+        widget=forms.Select(choices=DEPARTMENT_CHOICES),
+    )
+    position = forms.CharField(
+        widget=forms.Select(choices=POSITION_CHOICES),
+    )
     password = forms.CharField(
         label='Password',
         strip=False,
@@ -108,7 +115,10 @@ class BodySignupForm(forms.ModelForm):
 
 class EmployeeLoginForm(forms.Form):
     name = forms.CharField(max_length=100, label='Full name')
-    position = forms.ChoiceField(choices=POSITION_CHOICES, label='Position')
+    position = forms.CharField(
+        label='Position',
+        widget=forms.Select(choices=POSITION_CHOICES),
+    )
     password = forms.CharField(strip=False, widget=forms.PasswordInput)
 
     def authenticate(self):
