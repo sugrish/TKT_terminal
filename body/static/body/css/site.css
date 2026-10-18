@@ -32,9 +32,10 @@ body {
 .brand-mark i:nth-child(1) { height: 45%; opacity: .72; }
 .brand-mark i:nth-child(2) { height: 72%; background: #d45b29; }
 .brand-mark i:nth-child(3) { height: 100%; background: var(--color-red); }
-.brand-copy { display: grid; gap: 2px; line-height: 1; }
-.brand-copy strong { font: 700 13px "Space Grotesk", sans-serif; letter-spacing: .15em; }
-.brand-copy span { color: #a89eae; font-size: 9px; font-weight: 700; letter-spacing: .22em; }
+.brand-copy { display: grid; gap: 0; margin: 0; overflow: visible; border-radius: 0; line-height: .95; }
+.brand-copy span { color: var(--color-orange); font-family: "Bebas Neue", Impact, sans-serif; font-weight: 700; }
+.brand-name { font-size: 22px; letter-spacing: .09em; }
+.brand-subtitle { font-size: 15px; letter-spacing: .13em; }
 .header-divider { width: 1px; height: 32px; background: #ffffff24; }
 .header-note { color: #948c9c; font-size: 10px; font-weight: 700; letter-spacing: .15em; white-space: nowrap; }
 .site-nav { display: flex; align-items: center; gap: 28px; margin-left: auto; }
@@ -250,8 +251,8 @@ button:hover, .button:hover {
     body { padding: 0 16px; }
     .site-header { min-height: 76px; gap: 12px; }
     .brand-mark { width: 34px; height: 34px; }
-    .brand-copy strong { font-size: 11px; }
-    .brand-copy span { font-size: 8px; }
+    .brand-name { font-size: 19px; }
+    .brand-subtitle { font-size: 13px; }
     .header-divider, .header-note { display: none; }
     .site-nav { gap: 16px; }
     .site-nav .nav-link { display: none; }
