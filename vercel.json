@@ -7,12 +7,16 @@
       "config": {
         "runtime": "python3.11"
       }
+    },
+    {
+      "src": "body/static/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "/static/$1"
+      "dest": "/body/static/$1"
     },
     {
       "src": "/media/(.*)",
