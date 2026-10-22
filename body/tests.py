@@ -56,6 +56,29 @@ class SignupViewTests(TestCase):
         self.assertContains(response, 'Operations')
         self.assertContains(response, expected_id)
 
+    def test_signup_saves_optional_phone_number(self):
+        response = self.client.post(
+            reverse('body:signup'),
+            {
+                'name': 'Alex Example',
+                'phone_number': '+1 555 010 1234',
+                'age': 30,
+                'department': 'Operations',
+                'position': 'Coordinator',
+                'residence': 'Example City',
+                'gender': 'Other',
+                'complications': 'None',
+                'password': TEST_PASSWORD,
+                'password_confirm': TEST_PASSWORD,
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            Body_signup.objects.get().phone_number,
+            '+1 555 010 1234',
+        )
+
     def test_homepage_displays_current_employee_profile(self):
         signup_data = {
             'name': 'Alex Example',

@@ -5,6 +5,7 @@ A Django application for employee registration, profile display, employee login,
 ## Features
 
 - Employee signup with generated, unique employee IDs
+- Optional phone number on employee profiles
 - Passwords stored as Django password hashes
 - Optional profile photo upload (JPG, JPEG, PNG, or WEBP; up to 5 MB)
 - Employee profile page

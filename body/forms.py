@@ -49,11 +49,18 @@ class BodySignupForm(forms.ModelForm):
         strip=False,
         widget=forms.PasswordInput,
     )
+    phone_number = forms.CharField(
+        label='Phone number (optional)',
+        required=False,
+        max_length=32,
+        widget=forms.TextInput(attrs={'type': 'tel', 'autocomplete': 'tel'}),
+    )
 
     class Meta:
         model = Body_signup
         fields = (
             'name',
+            'phone_number',
             'age',
             'department',
             'position',

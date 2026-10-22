@@ -12,6 +12,7 @@ def _employee_id_segment(value):
 
 class Body_signup(models.Model):
     name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=32, blank=True)
     age = models.IntegerField()
     department = models.CharField(max_length=100)
     position = models.CharField(max_length=100)
