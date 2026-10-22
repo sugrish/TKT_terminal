@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -98,6 +100,7 @@ WSGI_APPLICATION = 'TKT_terminal.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASE_URL = os.environ.get('DATABASE_URL', '')
+IS_VERCEL = os.environ.get('VERCEL') == '1'
 
 if DATABASE_URL:
     import dj_database_url
@@ -109,6 +112,8 @@ if DATABASE_URL:
     # Supabase's transaction pooler (port 6543) does not support server-side cursors.
     DATABASES['default']['DISABLE_SERVER_SIDE_CURSORS'] = True
 else:
+    if IS_VERCEL:
+        raise ImproperlyConfigured('DATABASE_URL must be configured for Vercel deployments.')
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -158,14 +163,19 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Uploaded files go to Supabase Storage when configured, otherwise to MEDIA_ROOT.
 SUPABASE_URL = os.environ.get('SUPABASE_URL', '')
-SUPABASE_KEY = os.environ.get('SUPABASE_KEY', '')
+SUPABASE_SERVICE_ROLE_KEY = os.environ.get('SUPABASE_SERVICE_ROLE_KEY', '')
 SUPABASE_STORAGE_BUCKET = os.environ.get('SUPABASE_STORAGE_BUCKET', 'employee-photos')
+
+if IS_VERCEL and not (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY):
+    raise ImproperlyConfigured(
+        'SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be configured for Vercel deployments.'
+    )
 
 STORAGES = {
     'default': {
         'BACKEND': (
             'body.storage.SupabaseStorage'
-            if SUPABASE_URL and SUPABASE_KEY
+            if SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
             else 'django.core.files.storage.FileSystemStorage'
         ),
     },

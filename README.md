@@ -38,6 +38,19 @@ python manage.py runserver
 
 Open `http://127.0.0.1:8000/body/` to sign up. The employee profile is at `http://127.0.0.1:8000/body/homepage/`, and the login page is at `http://127.0.0.1:8000/body/login/`.
 
+## Supabase and Vercel deployment
+
+In Supabase, create a Postgres project and a **private** Storage bucket named `employee-photos`. Configure these environment variables for the Vercel project (Production and any Preview environments that need Supabase):
+
+- `DATABASE_URL`: Supabase **transaction pooler** connection string (port `6543`), including the database password.
+- `SUPABASE_URL`: the project URL, such as `https://<project-ref>.supabase.co`.
+- `SUPABASE_SERVICE_ROLE_KEY`: the service-role secret from the Supabase API settings. Store it only as a server-side Vercel environment variable; never use a publishable key for server-side uploads or expose this secret in client code.
+- `SUPABASE_STORAGE_BUCKET`: `employee-photos` (optional; this is the default).
+- `DJANGO_SECRET_KEY`: a unique production secret.
+- `DJANGO_DEBUG`: `false`.
+
+Do not commit these values or put database passwords or the service-role secret in source code. After setting `DATABASE_URL`, run `python manage.py migrate` against the Supabase database to create the Django tables, then redeploy Vercel. The app uses signed URLs that expire after one hour to display files from the private bucket.
+
 ## Granting HR access
 
 1. Sign in to Django Admin at `http://127.0.0.1:8000/admin/` with a superuser.

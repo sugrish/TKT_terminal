@@ -14,17 +14,16 @@ from django.utils.deconstruct import deconstructible
 
 @deconstructible
 class SupabaseStorage(Storage):
-    """Store uploaded files in a public Supabase Storage bucket."""
+    """Store uploaded files in a private Supabase Storage bucket."""
 
     def __init__(self, url=None, key=None, bucket=None, timeout=20):
         self.base_url = (url or settings.SUPABASE_URL).rstrip('/')
-        self.key = key or settings.SUPABASE_KEY
+        self.key = key or settings.SUPABASE_SERVICE_ROLE_KEY
         self.bucket = bucket or settings.SUPABASE_STORAGE_BUCKET
         self.timeout = timeout
 
-    def _object_url(self, name, public=False):
-        prefix = 'object/public' if public else 'object'
-        return f'{self.base_url}/storage/v1/{prefix}/{self.bucket}/{quote(name)}'
+    def _object_url(self, name):
+        return f'{self.base_url}/storage/v1/object/{self.bucket}/{quote(name)}'
 
     def _request(self, method, url, data=None, headers=None):
         request_headers = {
@@ -67,9 +66,14 @@ class SupabaseStorage(Storage):
 
     def exists(self, name):
         try:
-            self._request('HEAD', self._object_url(name, public=True)).close()
-        except URLError:
-            return False
+            self._request('HEAD', self._object_url(name)).close()
+        except HTTPError as error:
+            if error.code == 404:
+                return False
+            detail = error.read().decode(errors='replace')
+            raise OSError(f'Supabase storage check failed ({error.code}): {detail}') from error
+        except URLError as error:
+            raise OSError(f'Supabase storage check failed: {error.reason}') from error
         return True
 
     def delete(self, name):
@@ -83,4 +87,26 @@ class SupabaseStorage(Storage):
         ).close()
 
     def url(self, name):
-        return self._object_url(name, public=True)
+        payload = json.dumps({'expiresIn': 3600}).encode()
+        try:
+            with self._request(
+                'POST',
+                f'{self.base_url}/storage/v1/object/sign/{self.bucket}/{quote(name)}',
+                data=payload,
+                headers={'Content-Type': 'application/json'},
+            ) as response:
+                result = json.loads(response.read())
+        except HTTPError as error:
+            detail = error.read().decode(errors='replace')
+            raise OSError(f'Supabase signed URL request failed ({error.code}): {detail}') from error
+
+        signed_url = result.get('signedURL')
+        if not isinstance(signed_url, str) or not signed_url:
+            raise OSError('Supabase signed URL response did not include signedURL')
+        if signed_url.startswith(('https://', 'http://')):
+            return signed_url
+        if signed_url.startswith('/storage/v1/'):
+            return f'{self.base_url}{signed_url}'
+        if signed_url.startswith('/'):
+            return f'{self.base_url}/storage/v1{signed_url}'
+        raise OSError('Supabase returned an invalid signed URL')
