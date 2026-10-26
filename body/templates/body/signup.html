@@ -4,14 +4,46 @@
 {% block body_class %}page-signup{% endblock %}
 
 {% block content %}
-<main class="signup-card">
-    <h1>Sign up</h1>
-    <p class="signup-intro">Create your employee profile to get started. Your details are handled securely.</p>
-    <form class="signup-form" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
-    <p>Already signed up? <a href="{% url 'body:login' %}">Log in</a></p>
+<main class="signup-layout">
+    <section class="signup-story" aria-labelledby="signup-heading">
+        <svg class="signup-orbit-art" viewBox="0 0 360 260" aria-hidden="true">
+            <defs>
+                <linearGradient id="signup-orbit-fill" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#eb3324"/>
+                    <stop offset="1" stop-color="#a14214"/>
+                </linearGradient>
+                <mask id="signup-s-cutout">
+                    <rect width="360" height="260" fill="white"/>
+                    <text x="180" y="190" fill="black" font-family="Arial, sans-serif" font-size="176" font-weight="700" text-anchor="middle">S</text>
+                </mask>
+            </defs>
+            <ellipse cx="180" cy="130" rx="158" ry="58" fill="none" stroke="#ffffff40" stroke-width="1.5" transform="rotate(-24 180 130)"/>
+            <ellipse cx="180" cy="130" rx="126" ry="92" fill="none" stroke="#a14214" stroke-opacity=".65" stroke-width="1.5" transform="rotate(34 180 130)"/>
+            <circle cx="180" cy="130" r="82" fill="url(#signup-orbit-fill)" mask="url(#signup-s-cutout)"/>
+            <circle cx="43" cy="66" r="6" fill="#f5f3f2"/>
+            <circle cx="307" cy="190" r="5" fill="#eb3324"/>
+        </svg>
+        <p class="signup-kicker">TKT TERMINAL <span>·</span> PEOPLE FIRST</p>
+        <h1 id="signup-heading">Good work starts <span>with people.</span></h1>
+        <p class="signup-story-copy">Create your employee profile to get connected with your team and the services that make work simpler.</p>
+        <div class="signup-promise">
+            <span class="signup-promise-mark" aria-hidden="true">✓</span>
+            <span><strong>Your details stay protected</strong><br>Only authorized team members can access employee records.</span>
+        </div>
+    </section>
+
+    <section class="signup-panel" aria-labelledby="signup-form-heading">
+        <div class="signup-panel-heading">
+            <p class="signup-step">01 <span>/</span> CREATE PROFILE</p>
+            <h2 id="signup-form-heading">Join your team.</h2>
+            <p class="signup-intro">Fill in your details to set up your employee profile.</p>
+        </div>
+        <form class="signup-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Create my profile <span aria-hidden="true">↗</span></button>
+        </form>
+        <p class="signup-login">Already have a profile? <a href="{% url 'body:login' %}">Log in <span aria-hidden="true">→</span></a></p>
+    </section>
 </main>
 {% endblock %}
