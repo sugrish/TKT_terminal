@@ -175,13 +175,14 @@ def employee_export(request):
     csv_response['Content-Disposition'] = 'attachment; filename="employees.csv"'
     writer = csv.writer(csv_response)
     writer.writerow((
-        'Employee ID', 'Name', 'Department', 'Position', 'Age', 'Residence',
-        'Gender', 'Photo URL', 'Complications',
+        'Employee ID', 'Name', 'Phone number', 'Department', 'Position', 'Age',
+        'Residence', 'Gender', 'Photo URL', 'Complications',
     ))
     for employee in employees:
         writer.writerow((
             employee.employee_id,
             employee.name,
+            employee.phone_number,
             employee.department,
             employee.position,
             employee.age,

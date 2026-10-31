@@ -451,7 +451,7 @@ class SignupViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response['Content-Type'].startswith('text/csv'))
-        self.assertIn(b'Employee ID,Name,Department', response.content)
+        self.assertIn(b'Employee ID,Name,Phone number,Department', response.content)
         self.assertIn(b'Avery Operations', response.content)
         self.assertNotIn(b'Harper Resource', response.content)
 

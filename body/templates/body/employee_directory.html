@@ -42,6 +42,7 @@
                     <th>Photo</th>
                     <th>Employee ID</th>
                     <th>Name</th>
+                    <th>Phone number</th>
                     <th>Department</th>
                     <th>Position</th>
                     <th>Age</th>
@@ -62,6 +63,7 @@
                     </td>
                     <td>{{ employee.employee_id }}</td>
                     <td>{{ employee.name }}</td>
+                    <td>{{ employee.phone_number|default:"None" }}</td>
                     <td>{{ employee.department }}</td>
                     <td>{{ employee.position }}</td>
                     <td>{{ employee.age }}</td>
@@ -70,7 +72,7 @@
                     <td>{{ employee.complications|default:"None"|linebreaksbr }}</td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="9">No employee records match your search.</td></tr>
+                <tr><td colspan="10">No employee records match your search.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
