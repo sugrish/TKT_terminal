@@ -27,6 +27,9 @@ class Body_signup(models.Model):
         help_text='Override position permissions and allow directory viewing and CSV export.',
     )
 
+    class Meta:
+        db_table = 'employee_info'
+
     def save(self, *args, **kwargs):
         if not self.employee_id:
             name_parts = self.name.split()

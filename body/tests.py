@@ -13,6 +13,9 @@ TEST_PASSWORD = 'Uncommon-Passphrase-2026!'
 
 
 class SignupViewTests(TestCase):
+    def test_signup_uses_employee_info_table(self):
+        self.assertEqual(Body_signup._meta.db_table, 'employee_info')
+
     def test_root_url_redirects_to_body_signup(self):
         response = self.client.get('/')
 
